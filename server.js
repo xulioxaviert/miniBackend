@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
-const cors = require('cors'); // Importa el paquete cors
+const cors = require('cors');
 const gmailPassword = process.env.gmailPassword;
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
-  const from = 'xulioxaviert.pruebas.dev@gmail.com'; // Reemplaza con tu correo
+  const from = 'xulioxaviert.pruebas.dev@gmail.com';
 
 
   const transporter = nodemailer.createTransport({
