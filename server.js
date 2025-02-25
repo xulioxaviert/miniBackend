@@ -1,44 +1,49 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const nodemailer = require('nodemailer');
+const cors = require('cors'); // Importa el paquete cors
+const gmailPassword = process.env.gmailPassword;
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
-// Middleware
+// Habilita CORS para todas las solicitudes
 app.use(cors());
-app.use(bodyParser.json());
 
-// Ruta para enviar correos
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
+  const from = 'xulioxaviert.pruebas.dev@gmail.com'; // Reemplaza con tu correo
 
-  // Configuración del transportador
+
   const transporter = nodemailer.createTransport({
-    service: 'yopmail', // Cambia esto según tu proveedor de correo
+    service: 'gmail',
     auth: {
-      user: 'pruebas_envio_correo@yopmail.coom', // Tu correo
-      pass: '', // Tu contraseña
+      user: from,
+      pass: gmailPassword
     },
   });
 
-  // Opciones del correo
   const mailOptions = {
-    from: 'pruebas_envio_correo@yopmail.coom',
-    to,
-    subject,
-    text,
+    from: from,
+    to: to,
+    subject: subject,
+    text: text,
+    html: `<p>${text}</p>`,
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    res.status(200).send({ message: 'Correo enviado', info });
+    console.log('Correo enviado correctamente: ', info.messageId);
+    res.status(200).send('Correo enviado correctamente!');
   } catch (error) {
-    res.status(500).send({ message: 'Error al enviar el correo', error });
+    console.error('Error al enviar el correo:', error);
+    res.status(500).send('Error al enviar el correo.');
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
