@@ -32,7 +32,7 @@ app.post('/send-email', async (req, res) => {
 
   // Leer el archivo de la plantilla
   const templateSource = fs.readFileSync(
-    './templates/emailTemplate.html',
+    './templates/emailTemplate_2.html',
     'utf8',
   );
 
@@ -53,6 +53,13 @@ app.post('/send-email', async (req, res) => {
       to,
       subject,
       html: htmlToSend, // Aquí se envía la plantilla HTML procesada
+      attachments: [
+        {
+          filename: 'img_email.jpg', // Nombre del archivo adjunto
+          path: './templates/img/img_email.jpg', // Ruta al archivo en tu servidor
+          cid: 'img', // Identificador que coincide con el src en el HTML
+        },
+      ],
     });
     res.status(200).json({ message: 'Correo enviado correctamente', info });
   } catch (error) {
