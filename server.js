@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-require( 'dotenv' ).config();
+require('dotenv').config();
 const fs = require('fs');
 const handlebars = require('handlebars');
+const path = require('path');
 
 const app = express();
 const port = 4000;
@@ -28,44 +29,68 @@ const transporter = nodemailer.createTransport({
 
 // Ruta para enviar correos
 app.post('/send-email', async (req, res) => {
-  const { to, subject, text } = req.body;
-
-  // Leer el archivo de la plantilla
-  const templateSource = fs.readFileSync(
-    './templates/emailTemplate_2.html',
-    'utf8',
+  const { date, id, products } = req.body;
+  const processedProducts = products.map((product) => {
+  const quantity =
+    product.properties && product.properties.length > 0
+      ? product.properties[0].quantity
+      : 0;
+  return { ...product, quantity };
+});
+  const templatePath = path.join(
+    __dirname,
+    'templates',
+    'emailTemplate_2.html',
   );
+  // Leer la plantilla
+  fs.readFile(templatePath, 'utf8', async (err, htmlTemplate) => {
+    if (err) {
+      console.error('Error leyendo la plantilla de correo:', err);
+      return res
+        .status(500)
+        .json({ error: 'Error al leer la plantilla de correo.' });
+    }
 
-  // Compilar la plantilla con Handlebars
-  const template = handlebars.compile(templateSource);
-  const htmlToSend = template({ text });
+    // Compilar la plantilla con Handlebars
+    const template = handlebars.compile(htmlTemplate);
+    const htmlToSend = template({
+      id,
+      date,
+      products: processedProducts,
+    });
 
-  // const mailOptions = {
-  //   from: process.env.GMAIL_USER,
-  //   to,
-  //   subject,
-  //   text,
-  // };
+    // Configuración de Nodemailer (modifica el servicio y credenciales según corresponda)
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+      },
+    });
 
-  try {
-    let info = await transporter.sendMail({
+    // Opciones del correo
+    let mailOptions = {
       from: process.env.GMAIL_USER,
-      to,
-      subject,
-      html: htmlToSend, // Aquí se envía la plantilla HTML procesada
+      to: 'pruebas_envio_correo@yopmail.com',
+      subject: `Recibo de tu compra - Pedido ${id}`,
+      html: htmlToSend,
       attachments: [
         {
-          filename: 'img_email.jpg', // Nombre del archivo adjunto
-          path: './templates/img/img_email.jpg', // Ruta al archivo en tu servidor
-          cid: 'img', // Identificador que coincide con el src en el HTML
+          filename: 'img_email.jpg',
+          path: path.join(__dirname, 'templates', 'img', 'img_email.jpg'),
+          cid: 'img',
         },
       ],
-    });
-    res.status(200).json({ message: 'Correo enviado correctamente', info });
-  } catch (error) {
-    console.error('Error al enviar el correo:', error);
-    res.status(500).json({ error: 'Error al enviar el correo' });
-  }
+    };
+    try {
+      let info = await transporter.sendMail(mailOptions);
+      console.log('Mensaje enviado: %s', info.messageId);
+      return res.json({ message: 'Correo enviado correctamente.' });
+    } catch (sendError) {
+      console.error('Error enviando el correo:', sendError);
+      return res.status(500).json({ error: 'Error al enviar el correo.' });
+    }
+  });
 });
 
 app.listen(port, () => {

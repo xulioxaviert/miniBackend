@@ -63,28 +63,23 @@
                   <th align="left" style="padding:10px; font-size:14px; color:#333333;">Cantidad</th>
                   <th align="left" style="padding:10px; font-size:14px; color:#333333;">Precio</th>
                 </tr>
+                {{#each products}}
                 <tr style="padding: 1.5rem 0;">
-                  <td style="padding:10px; font-size:14px; color:#666666;">Villa Floral (12 ml)</td>
-                  <td style="padding:10px; font-size:14px; color:#666666;">1</td>
-                  <td style="padding:10px; font-size:14px; color:#666666;">$175.90</td>
+                  <td style="padding:10px; font-size:14px; color:#666666;">{{ description }}</td>
+                  <td style="padding:10px; font-size:14px; color:#666666;">{{quantity}}</td>
+                  <td style="padding:10px; font-size:14px; color:#666666;">{{ price }}</td>
                 </tr>
-                <tr style="background-color:#f4f4f4; padding: 1.5rem 0;">
-                  <td style="padding:10px; font-size:14px; color:#666666;">Port Toulon (40 ml)</td>
-                  <td style="padding:10px; font-size:14px; color:#666666;">1</td>
-                  <td style="padding:10px; font-size:14px; color:#666666;">$210.90</td>
-                </tr>
+                {{/each}}
               </table>
             </td>
           </tr>
            <!-- Título y datos de recibo -->
           <tr>
             <td align="center" style="padding: 20px;">
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Recibo de Venta</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">20 de enero de 2020 - 5:48 PM</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Empleado: Sammie</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Cliente: Jane Doe</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Correo: janedoe@example.com</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Número de Ticket: 123456789</p>
+              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Recibo de Venta: {{ id }}</p>
+              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">{{ date }}</p>
+              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Cliente: CLiente</p>
+              
             </td>
           </tr>
           <!-- Mensaje de oferta -->
