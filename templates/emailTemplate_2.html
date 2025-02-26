@@ -19,6 +19,8 @@
       max-width: 100%;
       height: auto;
     }
+    .products th, .products td { padding: 10px; border: 1px solid #ddd; }
+    .highlight { background-color: #F4F4F4; } /* Fondo gris */
     /* Estilos responsivos (opcional, dependiendo de las necesidades) */
     @media only screen and (max-width: 600px) {
       .container {
@@ -57,17 +59,17 @@
           <tr style="margin-top: 5rem;">
             <td align="center" style="padding: 0 20px;">
               <h1 style="margin:0; font-size:22px; color:#333333; text-align: left; font-family: sans-serif; padding: 1rem 0;">GRACIAS POR TU COMPRA</h1>
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 2rem 0;">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr style="background-color:#f4f4f4;">
                   <th align="left" style="padding:10px; font-size:14px; color:#333333;">Artículo</th>
-                  <th align="left" style="padding:10px; font-size:14px; color:#333333;">Cantidad</th>
-                  <th align="left" style="padding:10px; font-size:14px; color:#333333;">Precio</th>
+                  <th align="left" style="padding:10px; font-size:14px; color:#333333; text-align: center;">Cantidad</th>
+                  <th align="left" style="padding:10px; font-size:14px; color:#333333; text-align: center;">Precio</th>
                 </tr>
                 {{#each products}}
-                <tr style="padding: 1.5rem 0;">
-                  <td style="padding:10px; font-size:14px; color:#666666;">{{ description }}</td>
-                  <td style="padding:10px; font-size:14px; color:#666666;">{{quantity}}</td>
-                  <td style="padding:10px; font-size:14px; color:#666666;">{{ price }}</td>
+                <tr style="padding: 1.5rem 0";>
+                  <td style="padding:10px; font-size:14px; color:#666666;">{{ title }}</td>
+                  <td style="padding:10px; font-size:14px; color:#666666; text-align: center;">{{ quantity }}</td>
+                  <td style="padding:10px; font-size:14px; color:#666666; text-align: center;">$ {{ price }}</td>
                 </tr>
                 {{/each}}
               </table>
@@ -76,9 +78,9 @@
            <!-- Título y datos de recibo -->
           <tr>
             <td align="center" style="padding: 20px;">
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Recibo de Venta: {{ id }}</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">{{ date }}</p>
-              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Cliente: CLiente</p>
+              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Recibo de Venta: <span style="font-weight: bold;font-size: 18px; color: black;">{{ id }}</span></p>
+              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Fecha: <span style="font-weight: bold;font-size: 18px; color: black;">{{date}}</span></p>
+              <p style="margin:5px 0; font-size:12px; color:#666666; text-align: left; font-family: sans-serif;">Cliente: <span style="font-weight: bolder; font-size: 18px; color: black;">{{ name }}</span></p>
               
             </td>
           </tr>
@@ -98,7 +100,7 @@
           <tr>
             <td align="center" style="padding: 20px;">
               <p style="margin:0; font-size:14px; color:#333333; line-height:1.5;">
-                Gracias por comprar en Besuvio - Lillie. Si necesitas devolver algún artículo, 
+                Gracias por comprar en Ecommerce-App - Lillie. Si necesitas devolver algún artículo, 
                 deben ser devueltos en su empaque original con comprobante de compra. 
                 Si no tienes comprobante de compra, solo podremos ofrecer un cambio por otro artículo. 
                 ¡Esperamos que disfrutes nuestros productos!
