@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-require('dotenv').config();
+require( 'dotenv' ).config();
+const fs = require('fs');
+const handlebars = require('handlebars');
 
 const app = express();
 const port = 4000;
@@ -28,16 +30,31 @@ const transporter = nodemailer.createTransport({
 app.post('/send-email', async (req, res) => {
   const { to, subject, text } = req.body;
 
-  const mailOptions = {
-    from: process.env.GMAIL_USER,
-    to,
-    subject,
-    text,
-  };
+  // Leer el archivo de la plantilla
+  const templateSource = fs.readFileSync(
+    './templates/emailTemplate.html',
+    'utf8',
+  );
+
+  // Compilar la plantilla con Handlebars
+  const template = handlebars.compile(templateSource);
+  const htmlToSend = template({ text });
+
+  // const mailOptions = {
+  //   from: process.env.GMAIL_USER,
+  //   to,
+  //   subject,
+  //   text,
+  // };
 
   try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: 'Correo enviado exitosamente' });
+    let info = await transporter.sendMail({
+      from: process.env.GMAIL_USER,
+      to,
+      subject,
+      html: htmlToSend, // Aquí se envía la plantilla HTML procesada
+    });
+    res.status(200).json({ message: 'Correo enviado correctamente', info });
   } catch (error) {
     console.error('Error al enviar el correo:', error);
     res.status(500).json({ error: 'Error al enviar el correo' });
