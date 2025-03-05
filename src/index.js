@@ -21,7 +21,9 @@ const favoritesRoutes = require('./routes/favorites');
 // const authRoutes = require('./routes/auth');
 // const loginRoutes = require('./routes/login');
 const stockRoutes = require('./routes/stock');
-const productRoutes = require('./routes/products');
+const productRoutes = require( './routes/products' );
+const cartsRoutes = require( './routes/carts' )
+const salesRoutes = require( './routes/sales' );
 
 // Asigna las rutas a sus endpoints
 app.use('/api/users', userRoutes);
@@ -32,6 +34,8 @@ app.use('/api/favorites', favoritesRoutes);
 // app.use('/api/login', loginRoutes);
 app.use('/api/stock', stockRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/carts', cartsRoutes);
+app.use('/api/sales', salesRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
