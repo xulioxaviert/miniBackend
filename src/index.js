@@ -1,7 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
+const mongoose = require( 'mongoose' );
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(cors());
@@ -24,6 +27,7 @@ const stockRoutes = require('./routes/stock');
 const productRoutes = require( './routes/products' );
 const cartsRoutes = require( './routes/carts' )
 const salesRoutes = require( './routes/sales' );
+const loginRoutes = require('./routes/login');
 
 // Asigna las rutas a sus endpoints
 app.use('/api/users', userRoutes);
@@ -35,7 +39,8 @@ app.use('/api/favorites', favoritesRoutes);
 app.use('/api/stock', stockRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/carts', cartsRoutes);
-app.use('/api/sales', salesRoutes);
+app.use( '/api/sales', salesRoutes );
+app.use('/api/login', loginRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
