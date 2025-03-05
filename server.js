@@ -22,21 +22,22 @@ app.use(express.json());
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.GMAIL_USER, // Usa variables de entorno
+    user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
 });
 
 // Ruta para enviar correos
 app.post('/send-email', async (req, res) => {
-  const { date, id, products } = req.body;
+  const { date, id, products, name, to } = req.body;
   const processedProducts = products.map((product) => {
-  const quantity =
-    product.properties && product.properties.length > 0
-      ? product.properties[0].quantity
-      : 0;
-  return { ...product, quantity };
-});
+    const quantity =
+      product.properties && product.properties.length > 0
+        ? product.properties[0].quantity
+        : 0;
+    return { ...product, quantity };
+  });
+  const isMultiple = processedProducts.length > 1;
   const templatePath = path.join(
     __dirname,
     'templates',
@@ -55,8 +56,10 @@ app.post('/send-email', async (req, res) => {
     const template = handlebars.compile(htmlTemplate);
     const htmlToSend = template({
       id,
+      name,
       date,
       products: processedProducts,
+      isMultiple,
     });
 
     // Configuración de Nodemailer (modifica el servicio y credenciales según corresponda)
@@ -71,8 +74,8 @@ app.post('/send-email', async (req, res) => {
     // Opciones del correo
     let mailOptions = {
       from: process.env.GMAIL_USER,
-      to: 'pruebas_envio_correo@yopmail.com',
-      subject: `Recibo de tu compra - Pedido ${id}`,
+      to,
+      subject: `Resumen de tu compra - Pedido n° ${id}`,
       html: htmlToSend,
       attachments: [
         {
