@@ -14,11 +14,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
   try {
     const carts = await Carts.findById(req.params.id);
     if (!carts)
-      return res.status(404).json({ error: 'Carrito no encontrado' });
+      return res.status(200).json([]);
+    res.json(carts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+router.get('/userId/:userId', async (req, res) => {
+  try {
+    const userId = Number(req.params.userId);
+    const carts = await Carts.findOne({ userId });
+    if (!carts) return res.status(200).json([]);
     res.json(carts);
   } catch (error) {
     res.status(500).json({ error: error.message });

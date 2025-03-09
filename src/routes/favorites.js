@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
   try {
     const favorite = await Favorites.findById(req.params.id);
     if (!favorite)
-      return res.status(404).json({ error: 'Favorito no encontrado' });
+      return res.status(200).json([]);
     res.json(favorite);
   } catch (error) {
     res.status(500).json({ error: error.message });
