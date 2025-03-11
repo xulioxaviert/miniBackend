@@ -49,11 +49,19 @@ router.post( '/', async ( req, res ) =>
       expiresIn: '10h',
     });
 
-    // Devolver el token y el objeto de usuario (puedes filtrar campos sensibles)
+    // Devolver el token y solo campos específicos del usuario
+    const userData = {
+      name: user.name,
+      role: user.role || role,
+      userId: user.userId,
+      _id: user._id
+    };
+
     res.json({
       token,
-      user,
+      user: userData,
     });
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Error del servidor' });
